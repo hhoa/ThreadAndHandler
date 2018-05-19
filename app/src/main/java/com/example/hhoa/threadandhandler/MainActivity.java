@@ -12,6 +12,11 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity
                             implements View.OnClickListener{
@@ -23,6 +28,8 @@ public class MainActivity extends AppCompatActivity
     private Button btnAdd;
     private ProgressBar progressBar;
     private Handler mHandler;
+
+    ExecutorService myExecutor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,43 +43,22 @@ public class MainActivity extends AppCompatActivity
 
         btnAdd.setOnClickListener(this);
 
-        mHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message message) {
-                progressBar.setVisibility(View.INVISIBLE);
-                Bundle b = message.getData();
-                String s = (String) b.get(STRINGKEY);
-                Log.i(TAG, "handleMessage: " + s);
-            }
-        };
+        myExecutor = Executors.newFixedThreadPool(3);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        myExecutor.shutdown();  
     }
 
     @Override
     public void onClick(View v) {
-        txtView.append(getString(R.string.add_more_text));
-        scrollTextToEnd();
-        progressBar.setVisibility(View.VISIBLE);
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                Log.i(TAG, "run: start thread");
-                // You can replace sleep with your task
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                Message myMessage = new Message();
-                Bundle b = new Bundle();
-                b.putString(STRINGKEY, "run: end thread");
-                myMessage.setData(b);
-                mHandler.sendMessage(myMessage);
-
-            }
-        };
-
-        Thread t = new Thread(runnable);
-        t.start();
+        Toast.makeText(this, "See log for details", Toast.LENGTH_SHORT).show();
+        for (int i = 0; i < 6; i++) {
+            Runnable r = new Task(i);
+            myExecutor.execute(r);
+        }
     }
 
     private void scrollTextToEnd() {
