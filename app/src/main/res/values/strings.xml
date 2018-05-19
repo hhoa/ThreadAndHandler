@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">ThreadAndHandler</string>
+    <string name="add_text">Add Text</string>
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sed interdum lacus. Ut sollicitudin in ligula pharetra elementum. Duis eget lacinia libero. Vestibulum eu nulla augue. Suspendisse viverra, augue a volutpat placerat, metus lacus venenatis sapien, eget auctor mauris arcu eget magna. Ut bibendum ipsum vitae urna feugiat, ut tempus sem mollis. Quisque sed aliquet ipsum. Praesent laoreet, ligula vitae mattis facilisis, dolor felis sodales arcu, non ultricies tellus nibh nec augue. Quisque efficitur dui sit amet ex scelerisque, ac consequat mi ullamcorper. Morbi sit amet pellentesque ex. Suspendisse eu urna sollicitudin, euismod est vitae, feugiat ex. Sed auctor, risus nec dignissim commodo, diam ante efficitur eros, id laoreet orci eros sit amet ex. Fusce aliquet enim in orci cursus fringilla. Pellentesque fringilla felis ut nunc pharetra, vitae egestas risus varius. Suspendisse vel varius risus. Fusce mattis nisl non scelerisque pellentesque. Interdum et malesuada fames ac ante ipsum primis in faucibus.\n</string>
+    <string name="add_more_text">Add more text\n</string>
+</resources>
