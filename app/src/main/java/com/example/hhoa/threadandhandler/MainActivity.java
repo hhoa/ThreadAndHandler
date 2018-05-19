@@ -1,5 +1,6 @@
 package com.example.hhoa.threadandhandler;
 
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity
     private Handler mHandler;
 
     ExecutorService myExecutor;
+    private DemoAsyncTask myTask;
+    private boolean isRunning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,16 +52,26 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        myExecutor.shutdown();  
+        myExecutor.shutdown();
     }
 
     @Override
     public void onClick(View v) {
-        Toast.makeText(this, "See log for details", Toast.LENGTH_SHORT).show();
-        for (int i = 0; i < 6; i++) {
-            Runnable r = new Task(i);
-            myExecutor.execute(r);
+        if (myTask != null && isRunning)
+        {
+            myTask.cancel(true);
+            isRunning = false;
+        } else {
+            myTask = new DemoAsyncTask();
+            myTask.execute(1, 2, 3);
+            isRunning = true;
         }
+    }
+
+    public void writeIndexToTextView(Object index) {
+        if (index instanceof Integer || index instanceof String)
+            txtView.append(String.valueOf(index) + '\n');
+        scrollTextToEnd();
     }
 
     private void scrollTextToEnd() {
@@ -68,5 +81,46 @@ public class MainActivity extends AppCompatActivity
                 scrollView.fullScroll(ScrollView.FOCUS_DOWN);
             }
         });
+    }
+
+    class DemoAsyncTask extends AsyncTask<Integer, Integer, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Integer... integers) {
+            for (int i: integers) {
+                if (isCancelled())
+                {
+                    break;
+                }
+                publishProgress(i);
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return "Done";
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            for (int i: values)
+                writeIndexToTextView(i);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            writeIndexToTextView(s);
+        }
+
+        @Override
+        protected void onCancelled() {
+            writeIndexToTextView("Cancel AsyncTask");
+        }
     }
 }
